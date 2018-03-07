@@ -11,8 +11,10 @@ parser = argparse.ArgumentParser(description='Run Naive Bayes and Logistic Regre
 #  limit_iterations
 #  filter_stop_words
 
-parser.add_argument('--ham_directory', type=str, help="Path to directory containing all the ham")
-parser.add_argument('--spam_directory', type=str, help="Path to directory containing all the spam")
+parser.add_argument('--training_ham_directory', type=str, help="Training directory containing all the ham")
+parser.add_argument('--training_spam_directory', type=str, help="Training directory containing all the spam")
+parser.add_argument('--test_ham_directory', type=str, help="Test directory containing files classified as ham")
+parser.add_argument('--test_spam_directory', type=str, help="Test directory containing files classified as spam")
 parser.add_argument('--lambda', type=int, help="Regularization parameter for logistic regression")
 parser.add_argument('--limit_iterations', type=int, help="Hard limit on number of iterations for logistic regression")
 parser.add_argument('--filter_stop_words', type=str, help="Whether to filter stop words or not")
@@ -20,11 +22,11 @@ parser.add_argument('--filter_stop_words', type=str, help="Whether to filter sto
 args = parser.parse_args()
 
 # read ham
-ham = file_reader.FileReader(args.ham_directory)
+ham = file_reader.FileReader(args.training_ham_directory)
 print(ham.document_count, "ham files found")
 
 # read spam
-spam = file_reader.FileReader(args.spam_directory)
+spam = file_reader.FileReader(args.training_spam_directory)
 print(spam.document_count, "spam files found")
 
 nb_classifier = naive_bayes.NaiveBayes(ham=ham, spam=spam)
