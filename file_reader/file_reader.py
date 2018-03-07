@@ -5,9 +5,6 @@ import re
 
 
 class FileReader:
-    document_count = 0
-    vocabulary = {}
-
     def __init__(self, dir_path):
         """
         Initialise with path.
@@ -25,7 +22,7 @@ class FileReader:
             if os.path.isdir(dir_path):
                 files = list(filter(self.filter_text_files, os.listdir(dir_path)))  # list of files in the directory
                 self.document_count = len(files)
-                self.construct_vocabulary(dir_path, files)
+                self.vocabulary = self.construct_vocabulary(dir_path, files)
             else:
                 tb = sys.exc_info()[2]
                 raise FileNotFoundError().with_traceback(tb)
@@ -40,6 +37,8 @@ class FileReader:
         ----------
         files
         """
+        vocab = {}
+
         for file in files:
             # temporary hack to avoid file
             if file == "2248.2004-09-23.GP.spam.txt":
@@ -58,10 +57,11 @@ class FileReader:
                 file_text = file_text.split(' ')
 
                 for word in file_text:
-                    if word in self.vocabulary:
-                        self.vocabulary[word] += 1
+                    if word in vocab:
+                        vocab[word] += 1
                     else:
-                        self.vocabulary[word] = 1
+                        vocab[word] = 1
+        return vocab
 
     def filter_text_files(self, file_path):
         """
