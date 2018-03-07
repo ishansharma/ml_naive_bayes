@@ -1,4 +1,7 @@
 import copy
+import math
+import pandas as pd
+from file_reader import utilities as u
 
 
 class NaiveBayes:
@@ -83,3 +86,49 @@ class NaiveBayes:
                 vocab[word] = spam_dict[word]
 
         return vocab
+
+    def apply(self, ham_files, spam_files):
+        """
+        Apply Naive Bayes on all documents, return the
+        Parameters
+        ----------
+        ham_files
+        spam_files
+
+        Returns
+        -------
+        results: DataFrame
+        """
+        results = pd.DataFrame({}, columns=["file", "class", "classified", "accurate"])
+
+        ham_prior = self.priors['ham']
+        spam_prior = self.priors['spam']
+        for c in ['ham', 'spam']:
+            if c == 'ham':
+                files = ham_files.files
+            else:
+                files = spam_files.files
+
+            for file in files:
+                score_ham = math.log(ham_prior)
+                score_spam = math.log(spam_prior)
+                words = u.FileUtilities.get_word_frequency(file)
+
+                for word in words:
+                    if word in self.conditionals:
+                        score_ham += math.log(self.conditionals[word]['ham'])
+                        score_spam += math.log(self.conditionals[word]['spam'])
+                classified_as = 'spam'
+                if score_ham > score_spam:
+                    classified_as = 'ham'
+
+                accurate = 0
+                if c == classified_as:
+                    accurate = 1
+                results = results.append({"file": file, "class": c, "classified": classified_as, "accurate": accurate},
+                                         ignore_index=True)
+
+        # print("Spam Files:")
+        # print(spam_files.files)
+
+        return results
