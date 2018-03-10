@@ -1,6 +1,5 @@
 import argparse
 from file_reader import file_reader
-from file_reader import serial_file_reader as s
 from naive_bayes import naive_bayes as nb
 
 parser = argparse.ArgumentParser(description='Run Naive Bayes and Logistic Regression on given dataset and report '
@@ -40,8 +39,8 @@ print("Total training documents:", nb_classifier.total)
 
 # test data classification
 print("\n====\nRunning Naive Bayes on Test Data")
-test_ham = s.SerialFileReader(args.test_ham_directory)
-test_spam = s.SerialFileReader(args.test_spam_directory)
+test_ham = file_reader.FileReader(args.test_ham_directory)
+test_spam = file_reader.FileReader(args.test_spam_directory)
 
 r = nb_classifier.apply(test_ham, test_spam)
 total_test_docs = r['accurate'].count()
@@ -49,3 +48,4 @@ accurately_classified = r['accurate'].sum()
 print("Accurate documents:", accurately_classified)
 print("Total Documents: ", total_test_docs)
 print("Accuracy:", (accurately_classified / total_test_docs) * 100)
+
