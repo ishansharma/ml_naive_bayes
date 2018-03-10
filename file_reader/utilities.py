@@ -1,6 +1,7 @@
 import os.path
 import io
 import re
+import copy
 
 
 class FileUtilities:
@@ -80,4 +81,29 @@ class FileUtilities:
                     vocab[word] += words[word]
                 else:
                     vocab[word] = words[word]
+        return vocab
+
+    @staticmethod
+    def merge_dictionaries(ham_dict, spam_dict):
+        """
+        We accept ham and spam dictionary separately. However, we need combined vocabulary.
+        This function combined the two dictionaries and sets the vocabulary
+
+        Parameters
+        ----------
+        ham_dict
+        spam_dict
+
+        Returns
+        -------
+        vocab : dict
+        """
+        vocab = copy.copy(ham_dict)
+
+        for word in spam_dict:
+            if word in vocab:
+                vocab[word] += spam_dict[word]
+            else:
+                vocab[word] = spam_dict[word]
+
         return vocab

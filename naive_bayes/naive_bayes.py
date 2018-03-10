@@ -1,4 +1,3 @@
-import copy
 import math
 import pandas as pd
 from file_reader import utilities as u
@@ -17,7 +16,7 @@ class NaiveBayes:
             FileReader object containing document count and dictionary for spam documents
         """
         self.total = ham.document_count + spam.document_count
-        self.vocabulary = self.merge_dictionaries(ham.vocabulary, spam.vocabulary)
+        self.vocabulary = u.FileUtilities.merge_dictionaries(ham.vocabulary, spam.vocabulary)
         self.priors = {'ham': ham.document_count / self.total, 'spam': spam.document_count / self.total}
         self.conditionals = self.train(ham, spam)
 
@@ -61,30 +60,6 @@ class NaiveBayes:
                 'ham': conditional_for_ham,
                 'spam': conditional_for_spam
             }
-        return vocab
-
-    def merge_dictionaries(self, ham_dict, spam_dict):
-        """
-        We accept ham and spam dictionary separately. However, we need combined vocabulary.
-        This function combined the two dictionaries and sets the vocabulary
-
-        Parameters
-        ----------
-        ham_dict
-        spam_dict
-
-        Returns
-        -------
-        vocab : dict
-        """
-        vocab = copy.copy(ham_dict)
-
-        for word in spam_dict:
-            if word in vocab:
-                vocab[word] += spam_dict[word]
-            else:
-                vocab[word] = spam_dict[word]
-
         return vocab
 
     def apply(self, ham_files, spam_files):
