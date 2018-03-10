@@ -37,12 +37,12 @@ class NaiveBayes:
         vocab = {}
 
         # calculating variables needed again instead of asking for length each time
-        combined_vacabulary_size = len(self.vocabulary)
+        combined_vocabulary_size = len(self.vocabulary)
         ham_words = sum(ham.vocabulary.values())
         spam_words = sum(spam.vocabulary.values())
 
-        laplace_ham_size = ham_words + combined_vacabulary_size
-        laplace_spam_size = spam_words + combined_vacabulary_size
+        laplace_ham_size = ham_words + combined_vocabulary_size
+        laplace_spam_size = spam_words + combined_vocabulary_size
 
         # calculating priors for each word now
         for word in self.vocabulary:
