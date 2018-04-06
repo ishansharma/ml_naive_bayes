@@ -2,22 +2,12 @@ import argparse
 from file_reader import file_reader
 from naive_bayes import naive_bayes as nb
 
-parser = argparse.ArgumentParser(description='Run Naive Bayes and Logistic Regression on given dataset and report '
-                                             'accuracy')
-# arguments
-#  ham_directory
-#  spam_directory
-#  lambda
-#  limit_iterations
-#  filter_stop_words
+parser = argparse.ArgumentParser(description='Run Naive Bayes on given dataset and report accuracy')
 
 parser.add_argument('--training_ham_directory', type=str, help="Training directory containing all the ham")
 parser.add_argument('--training_spam_directory', type=str, help="Training directory containing all the spam")
 parser.add_argument('--test_ham_directory', type=str, help="Test directory containing files classified as ham")
 parser.add_argument('--test_spam_directory', type=str, help="Test directory containing files classified as spam")
-parser.add_argument('--learning_rate', type=float, help="Learning rate for gradient ascent")
-parser.add_argument('--limit_iterations', type=int, help="Hard limit on number of iterations for logistic regression")
-parser.add_argument('--reg_lambda', type=float, help="Regularization parameter for logistic regression")
 
 args = parser.parse_args()
 
