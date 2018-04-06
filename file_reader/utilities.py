@@ -60,7 +60,7 @@ class FileUtilities:
         return False
 
     @staticmethod
-    def construct_vocabulary(files):
+    def construct_vocabulary(files, filter):
         """
         Given a list of files, read them one by one and construct vocabulary
 
@@ -71,16 +71,25 @@ class FileUtilities:
         Returns
         -------
         vocab : dict
+        filter : bool
         """
         vocab = {}
+
+        stop_words = []
+        if filter:
+            with open('stop_words.txt', 'r') as f:
+                stop_words = f.read().replace('\n', ' ')
+
+            stop_words = stop_words.split(' ')
 
         for file in files:
             words = FileUtilities.get_word_frequency(file)
             for word in words:
-                if word in vocab:
-                    vocab[word] += words[word]
-                else:
-                    vocab[word] = words[word]
+                if word not in stop_words:
+                    if word.lower() in vocab:
+                        vocab[word.lower()] += words[word]
+                    else:
+                        vocab[word.lower()] = words[word]
         return vocab
 
     @staticmethod

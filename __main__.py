@@ -15,9 +15,9 @@ parser.add_argument('--training_ham_directory', type=str, help="Training directo
 parser.add_argument('--training_spam_directory', type=str, help="Training directory containing all the spam")
 parser.add_argument('--test_ham_directory', type=str, help="Test directory containing files classified as ham")
 parser.add_argument('--test_spam_directory', type=str, help="Test directory containing files classified as spam")
-parser.add_argument('--lambda', type=int, help="Regularization parameter for logistic regression")
+parser.add_argument('--learning_rate', type=float, help="Learning rate for gradient ascent")
 parser.add_argument('--limit_iterations', type=int, help="Hard limit on number of iterations for logistic regression")
-parser.add_argument('--filter_stop_words', type=str, help="Whether to filter stop words or not")
+parser.add_argument('--reg_lambda', type=float, help="Regularization parameter for logistic regression")
 
 args = parser.parse_args()
 
@@ -31,11 +31,6 @@ print(spam.document_count, "spam files found")
 
 nb_classifier = nb.NaiveBayes(ham=ham, spam=spam)
 print("Total training documents:", nb_classifier.total)
-# print("Prior probability for ham", nb_classifier.priors['ham'])
-# print("Prior probability for spam", nb_classifier.priors['spam'])
-
-# print("Conditional probabilities")
-# print(nb_classifier.conditionals)
 
 # test data classification
 print("\n====\nRunning Naive Bayes on Test Data")
@@ -49,3 +44,15 @@ print("Accurate documents:", accurately_classified)
 print("Total Documents: ", total_test_docs)
 print("Accuracy:", (accurately_classified / total_test_docs) * 100)
 
+print("\nRemoving stop words\n")
+
+ham = file_reader.FileReader(args.training_ham_directory, True)
+spam = file_reader.FileReader(args.training_spam_directory, True)
+test_ham = file_reader.FileReader(args.test_ham_directory, True)
+test_spam = file_reader.FileReader(args.test_spam_directory, True)
+
+rs = nb_classifier.apply(test_ham, test_spam)
+total_test_sw = rs['accurate'].count()
+sw_accurate = rs['accurate'].sum()
+print("Accurate Documents:", sw_accurate)
+print("Accuracy:", (sw_accurate / total_test_docs) * 100)
